@@ -1,0 +1,80 @@
+openapi: 3.0.0
+info:
+  title: Your API
+  version: 1.0.0
+  description: API documentation for your Laravel application
+paths:
+  /register:
+    post:
+      tags:
+        - Authentication
+      summary: User registration
+      description: Registers a new user and returns a token.
+      operationId: userRegister
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - password
+              properties:
+                name:
+                  type: string
+                  example: John Doe
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                password:
+                  type: string
+                  format: password
+                  example: password123
+      responses:
+        "201":
+          description: User successfully registered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsIn...
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: John Doe
+                      email:
+                        type: string
+                        format: email
+                        example: user@example.com
+                      created_at:
+                        type: string
+                        format: date-time
+                        example: 2024-08-02T00:00:00Z
+                      updated_at:
+                        type: string
+                        format: date-time
+                        example: 2024-08-02T00:00:00Z
+                  message:
+                    type: string
+                    example: Created successfully
+        "422":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: The email has already been taken.
