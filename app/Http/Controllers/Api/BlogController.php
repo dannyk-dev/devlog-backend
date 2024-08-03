@@ -30,9 +30,16 @@ class BlogController extends Controller implements HasMiddleware
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $blogs = Blog::with(['user', 'category', 'posts'])->latest()->paginate(6);
+        $query = Blog::query();
+
+        if ($request->has('user'))
+        {
+            $query->where('user_id', $request->query('user'));
+        }
+
+        $blogs = $query->with(['user', 'category', 'posts'])->latest()->paginate(6);
 
         return BlogResource::collection($blogs);
     }
@@ -71,7 +78,15 @@ class BlogController extends Controller implements HasMiddleware
      */
     public function update(Request $request, Blog $blog)
     {
-        //
+        $blog_update = $request->validate([
+            'title' => 'sometimes|string|max:255',
+            'description' => 'nullable|string',
+            'category_id' => 'sometimes|uuid|exists:categories,id'
+        ]);
+
+        $blog->update($blog_update);
+
+        return new BlogResource($blog);
     }
 
     /**
@@ -79,6 +94,8 @@ class BlogController extends Controller implements HasMiddleware
      */
     public function destroy(Blog $blog)
     {
-        //
+        $blog->delete();
+
+        return response()->noContent();
     }
 }
