@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BlogController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\PostController;
+use App\Http\Controllers\Api\TagController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,4 +20,4 @@ Route::apiResource('categories', CategoryController::class)->only(['index', 'sho
 Route::apiResource('blogs', BlogController::class);
 Route::apiResource('blogs.posts', PostController::class)->scoped();
 
-
+Route::apiResource('tags', TagController::class)->only(['index', 'show']);
