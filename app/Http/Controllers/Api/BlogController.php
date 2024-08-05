@@ -3,19 +3,17 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreBlogRequest;
+use App\Http\Requests\UpdateBlogRequest;
 use App\Http\Resources\BlogResource;
 use App\Models\Blog;
-use Illuminate\Foundation\Auth\Access\Authorizable;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 
 class BlogController extends Controller implements HasMiddleware
 {
-
-    use AuthorizesRequests, Authorizable;
-
     // 1|v5FqMKyBNQUTXRn4cRVlbFlscmrUA94A0aY8Hgkc58fa977d
 
     public static function middleware(): array
@@ -47,14 +45,10 @@ class BlogController extends Controller implements HasMiddleware
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreBlogRequest $request)
     {
         $blog = Blog::create([
-            ...$request->validate([
-                'title' => ['required', 'max:255'],
-                'description' => 'nullable',
-                'category_id' => 'uuid|required|exists:categories,id'
-            ]),
+            ...$request->validated(),
             'user_id' => $request->user()->id,
         ]);
 
@@ -76,15 +70,11 @@ class BlogController extends Controller implements HasMiddleware
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Blog $blog)
+    public function update(UpdateBlogRequest $request, Blog $blog)
     {
-        $blog_update = $request->validate([
-            'title' => 'sometimes|string|max:255',
-            'description' => 'nullable|string',
-            'category_id' => 'sometimes|uuid|exists:categories,id'
+        $blog->update([
+            ...$request->validated()
         ]);
-
-        $blog->update($blog_update);
 
         return new BlogResource($blog);
     }

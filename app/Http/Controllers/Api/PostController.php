@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StorePostRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Blog;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class PostController extends Controller implements HasMiddleware
 {
@@ -39,9 +39,14 @@ class PostController extends Controller implements HasMiddleware
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StorePostRequest $request, Blog $blog)
     {
-        //
+        $posts = $blog->posts()->create([
+            ...$request->validated(),
+            'blog_id' => $blog->id
+        ])->with(['blog', 'tags']);
+
+        return PostResource::collection($posts);
     }
 
     /**

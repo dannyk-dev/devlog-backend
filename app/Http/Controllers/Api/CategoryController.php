@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
-use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
@@ -14,7 +13,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::with('blogs')->latest()->get();
+        $categories = Category::with(['blogs', 'blogs.user'])->latest()->get();
 
         return CategoryResource::collection($categories);
     }
@@ -24,7 +23,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        $category->load(['blogs']);
+        $category->load(['blogs', 'blogs.user']);
 
         return new CategoryResource($category);
     }
