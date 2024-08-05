@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BlogController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\TagController;
 use Illuminate\Http\Request;
@@ -18,6 +19,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanc
 
 Route::apiResource('categories', CategoryController::class)->only(['index', 'show']);
 Route::apiResource('blogs', BlogController::class);
+
 Route::apiResource('blogs.posts', PostController::class)->scoped();
+Route::apiResource('posts.comments', CommentController::class)->scoped()->except('show');
 
 Route::apiResource('tags', TagController::class)->only(['index', 'show']);

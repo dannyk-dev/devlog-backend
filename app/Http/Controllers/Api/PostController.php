@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Blog;
 use App\Models\Post;
@@ -62,16 +63,24 @@ class PostController extends Controller implements HasMiddleware
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Post $post)
+    public function update(UpdatePostRequest $request, Blog $blog, Post $post)
     {
-        //
+        $post->update([
+            ...$request->validated()
+        ]);
+
+        $post->load(['blog', 'tags', 'blog.user']);
+        return new PostResource($post);
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Post $post)
     {
-        //
+        $post->delete();
+
+        return response()->noContent();
     }
 }
