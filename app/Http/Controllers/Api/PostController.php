@@ -42,12 +42,13 @@ class PostController extends Controller implements HasMiddleware
      */
     public function store(StorePostRequest $request, Blog $blog)
     {
-        $posts = $blog->posts()->create([
-            ...$request->validated(),
-            'blog_id' => $blog->id
-        ])->with(['blog', 'tags']);
+        $post = $blog->posts()->create([
+            ...$request->validated()
+        ]);
 
-        return PostResource::collection($posts);
+        $post->load(['blog', 'tags']);
+
+        return new PostResource($post);
     }
 
     /**

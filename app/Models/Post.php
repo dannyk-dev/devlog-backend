@@ -13,6 +13,12 @@ class Post extends Model
 {
     use HasFactory, HasUuids;
 
+    protected $fillable = [
+        'title',
+        'description',
+        'content'
+    ];
+
     public function blog(): BelongsTo
     {
         return $this->belongsTo(Blog::class);
