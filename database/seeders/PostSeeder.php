@@ -12,15 +12,17 @@ class PostSeeder extends Seeder
      */
     public function run(): void
     {
-        $blogs = \App\Models\Blog::all();
+        // $blogs = \App\Models\Blog::all();
+        $users = \App\Models\User::all();
+        $categories = \App\Models\Category::all();
 
-        foreach ($blogs as $blog)
+        foreach ($users as $user)
         {
+            $category = $categories->random();
+
             \App\Models\Post::factory(2)->create([
-                'title' => fake()->sentence(2),
-                'description' => fake()->sentence(30),
-                'content' => fake()->sentence(150),
-                'blog_id' => $blog->id
+                'user_id' => $user->id,
+                'category_id' => $category->id
             ]);
         }
     }

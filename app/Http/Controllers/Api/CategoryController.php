@@ -13,7 +13,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::with(['blogs', 'blogs.user'])->latest()->get();
+        $categories = Category::with(['posts', 'posts.user'])->latest()->paginate(15);
 
         return CategoryResource::collection($categories);
     }
@@ -23,8 +23,10 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        $category->load(['blogs', 'blogs.user']);
+        $category->load(['posts', 'posts.user']);
 
         return new CategoryResource($category);
     }
+
+
 }

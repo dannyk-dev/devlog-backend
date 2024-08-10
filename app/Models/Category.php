@@ -11,8 +11,8 @@ class Category extends Model
 {
     use HasFactory, HasUuids;
 
-    public function blogs(): HasMany
+    public function posts(): HasMany
     {
-        return $this->hasMany(Blog::class);
+        return $this->hasMany(Post::class);
     }
 }

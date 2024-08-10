@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AuthLoginRequest;
 use App\Http\Requests\AuthRegisterRequest;
+use App\Http\Resources\StandardResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,9 +21,8 @@ class AuthController extends Controller
         $token = $user->createToken($request->name)->plainTextToken;
 
         return response()->json([
-            'token' => $token,
             'user' => $user,
-            'token_type' => 'Bearer',
+            'token' => $token,
             'message' => 'Created succesfully'
         ], 200);
     }
@@ -42,7 +42,8 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->firstOrFail();
         $token = $user->createToken($user->name)->plainTextToken;
 
-        return response()->json([
+        return new StandardResource([
+            'user' => $user,
             'token' => $token
         ]);
     }

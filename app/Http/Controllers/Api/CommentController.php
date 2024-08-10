@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Middleware\AuthenticateToken;
 use App\Http\Resources\CommentResource;
 use App\Models\Comment;
 use App\Models\Post;
@@ -15,10 +16,14 @@ class CommentController extends Controller implements HasMiddleware
 
     public static function middleware(): array
     {
+        $auth_cookie = new Middleware(AuthenticateToken::class);
         $auth_middleware = new Middleware('auth:sanctum');
 
+        $prevented = ['index'];
+
         return [
-            $auth_middleware->except(['index'])
+            $auth_cookie->except($prevented),
+            $auth_middleware->except($prevented)
         ];
     }
 

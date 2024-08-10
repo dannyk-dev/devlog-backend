@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Blog;
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -20,8 +20,8 @@ class CategoryResource extends JsonResource
             'name' => $this->name,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'blog_count' => Blog::all()->where('category_id', $this->id)->count(),
-            'blogs' => BlogResource::collection($this->whenLoaded('blogs'))
+            'blog_count' => Post::all()->where('category_id', $this->id)->count(),
+            'blogs' => PostResource::collection($this->whenLoaded('posts'))
         ];
     }
 }

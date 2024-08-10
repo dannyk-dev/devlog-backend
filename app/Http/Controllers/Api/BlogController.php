@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Middleware\AuthenticateToken;
 use App\Http\Requests\StoreBlogRequest;
 use App\Http\Requests\UpdateBlogRequest;
 use App\Http\Resources\BlogResource;
@@ -18,10 +19,14 @@ class BlogController extends Controller implements HasMiddleware
 
     public static function middleware(): array
     {
+        $auth_cookie = new Middleware(AuthenticateToken::class);
         $auth_middleware = new Middleware('auth:sanctum');
 
+        $prevented = ['index', 'show'];
+
         return [
-            $auth_middleware->except(['index', 'show'])
+            $auth_cookie->except($prevented),
+            $auth_middleware->except($prevented)
         ];
     }
 
